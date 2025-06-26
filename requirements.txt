@@ -6,9 +6,15 @@ numpy==1.26.0
 opencv_python==4.7.0.72
 opencv_python_headless==4.9.0.80
 python-dotenv==1.0.1
-pytubefix
-torch
-webrtcvad-wheels
-pydub
-openai==1.44.1
+pytubefix~=8.12.0
+torch~=2.5.1+cu121
+webrtcvad-wheels~=2.0.14
+pydub~=0.25.1
+openai~=1.59.9
+google-generativeai
 --extra-index-url https://download.pytorch.org/whl/cu121
+
+opencv-python~=4.7.0.72
+protobuf~=5.29.3
+faster-whisper~=1.0.1
+ffmpeg-python~=0.2.0

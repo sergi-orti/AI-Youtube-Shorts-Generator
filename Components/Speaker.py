@@ -37,8 +37,10 @@ global Frames
 Frames = [] # [x,y,w,h]
 
 def detect_faces_and_speakers(input_video_path, output_video_path):
-    # Return Frams:
+    # Return Frames:
     global Frames
+    Frames = []
+
     # Extract audio from the video
     extract_audio_from_video(input_video_path, temp_audio_path)
 
@@ -84,8 +86,18 @@ def detect_faces_and_speakers(input_video_path, output_video_path):
                 # Assuming lips are approximately at the bottom third of the face
                 lip_distance = abs((y + 2 * face_height // 3) - (y1))
                 Add.append([[x, y, x1, y1], lip_distance])
-
                 MaxDif == max(lip_distance, MaxDif)
+
+        if Add:  # Solo agregar si hay detecciones
+            Frames.append(Add[0][0])  # Toma el primer frame detectado
+            print(f"Frame added: {Add[0][0]}")  # Debug log
+
+        out.write(frame)
+        cv2.imshow('Frame', frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
         for i in range(detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > 0.3:  # Confidence threshold
@@ -120,7 +132,11 @@ def detect_faces_and_speakers(input_video_path, output_video_path):
     cv2.destroyAllWindows()
     os.remove(temp_audio_path)
 
-
+    # Verifica el tamaño de Frames
+    print(f"Total Frames Detected: {len(Frames)}")
+    if len(Frames) < 5:
+        print("Warning: Not enough frames detected.")
+    return Frames
 
 if __name__ == "__main__":
     detect_faces_and_speakers()

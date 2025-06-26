@@ -5,7 +5,7 @@ from Components.Speaker import detect_faces_and_speakers, Frames
 global Fps
 
 def crop_to_vertical(input_video_path, output_video_path):
-    detect_faces_and_speakers(input_video_path, "DecOut.mp4")
+    Frames = detect_faces_and_speakers(input_video_path, "DecOut.mp4")
     face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
     cap = cv2.VideoCapture(input_video_path, cv2.CAP_FFMPEG)
@@ -58,7 +58,7 @@ def crop_to_vertical(input_video_path, output_video_path):
                 print(e)
                 (X, Y, W, H) = Frames[count][0]
                 print(Frames[count][0])
-            
+
             for f in faces:
                 x1, y1, w1, h1 = f
                 center = x1+ w1//2
@@ -70,8 +70,13 @@ def crop_to_vertical(input_video_path, output_video_path):
                     break
 
             # print(faces[0])
-            centerX = x+(w//2)
-            print(centerX)
+            try:
+                centerX = x + (w // 2)
+                print(centerX)
+            except Exception as e:
+                print(f"Error calculating centerX: {e}")
+                continue
+
             print(x_start - (centerX - half_width))
             if count == 0 or (x_start - (centerX - half_width)) <1 :
                 ## IF dif from prev fram is low then no movement is done
@@ -99,7 +104,7 @@ def crop_to_vertical(input_video_path, output_video_path):
             x_start = (original_width - vertical_width) // 2
             x_end = x_start + vertical_width
             cropped_frame = frame[:, x_start:x_end]
-        
+
         print(cropped_frame.shape)
 
         out.write(cropped_frame)
